@@ -8,11 +8,11 @@ Sampling strategy: can be "misleading" or "self_random"; can query only once by 
 """
 import os, pdb, time, re
 import os.path as osp
-import random
 import json
 from utils.dataset_loader import load_dataset
 from utils.llm_query_helper import calculate_result_per_question
 from argparse import ArgumentParser
+import secrets
 
 openai_key = "your_openai_key" # TODO: replace with your openai key
 
@@ -114,10 +114,10 @@ def generate_misleading_hint(hint_type, task_type, question, qa_dataset):
     
     if task_type == 'open_number_qa':
         correct_answer = abs(int(qa_dataset[question]['answer']))
-        noise = random.randint(-correct_answer, correct_answer)
+        noise = secrets.SystemRandom().randint(-correct_answer, correct_answer)
         random_answer = correct_answer + noise 
     elif task_type == "multi_choice_qa":
-        random_answer = random.randint(0, len(qa_dataset[question]['options'])-1)
+        random_answer = secrets.SystemRandom().randint(0, len(qa_dataset[question]['options'])-1)
         random_answer = answer_list[random_answer]
     else:
         raise ValueError(f"{task_type} not supported")
